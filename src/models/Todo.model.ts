@@ -5,6 +5,6 @@
 export interface Todo {
   text: string
   done: boolean
-  displayDone?: boolean
+  interact?: boolean
   id: number
 }
