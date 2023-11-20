@@ -1,12 +1,3 @@
-<!-- 
-  Le composant App représente l'application en elle-même : c'est le composant racine,
-   il est parent de tous les autres. (voir main.ts)
-
-  la balise <script setup> définit le code typescript à exécuter 
-  on précise lang="ts" pour que Vue compile le code en JavaScript
-  
-  Plus d'infos : https://vuejs.org/api/sfc-script-setup.html#script-setup 
--->
 <script setup lang="ts">
 // on importe de depuis vue les fonctions qui nous intéresse (il y en a bien plus que ça)
 /**
@@ -161,7 +152,6 @@ const allDone = computed(() => mesTodos.value.filter((t) => !t.done).length === 
   <header>
     <h1 class="title">Vue 3 TodoList</h1>
   </header>
-
   <main>
     <div class="card">
       <h2 class="title">Mes Todos</h2>
@@ -199,8 +189,12 @@ const allDone = computed(() => mesTodos.value.filter((t) => !t.done).length === 
       </div>
     </div>
   </main>
-  <!-- Si tous les todos sont done, on ajoute des confettis parce que c'est la fête -->
-  <img v-if="allDone" src="./assets/confetti.svg" class="all-done" />
+
+  <footer>
+    <p>
+      <RouterLink to="about">A propos de cette app</RouterLink>
+    </p>
+  </footer>
 </template>
 
 <!--
@@ -210,25 +204,18 @@ const allDone = computed(() => mesTodos.value.filter((t) => !t.done).length === 
     et suffixer nos règles de style avec ce hash 
  -->
 <style scoped>
-@keyframes appear {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 header {
   line-height: 1.5;
 }
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+
+.title {
+  text-align: center;
 }
+
+.main {
+  flex: 1 0
+}
+
 .card {
   width: calc(100% - 1rem);
   border-radius: 12px;
@@ -236,42 +223,10 @@ main {
   padding: 0.5rem;
   margin-bottom: 1rem;
 }
-@media screen and ((min-width: 768px)) {
-  main {
-    flex-direction: row;
-    align-items: start;
-  }
-  .card {
-    width: calc(50% - 1rem);
-  }
-}
-.new-todo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.new-todo button {
-  margin-top: 0.5rem;
-}
 
-.all-done {
-  user-select: none;
-  animation: appear 1s;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  background: rgba(250, 250, 177, 0.659);
-}
-
-.title {
+footer {
+  background-color: goldenrod;
   text-align: center;
-}
-hr {
-  color: goldenrod;
+  font-weight: bolder;
 }
 </style>
