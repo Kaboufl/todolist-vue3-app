@@ -31,8 +31,10 @@ import type { Todo } from '@/models/Todo.model';
 
 const mesTodos = ref<Todo[]>([]);
 
+
 onMounted(async () => {
-    const response = await fetch('http://localhost:3000/todos');
+    console.log('app mounted');
+    const response = await fetch('api/todos');
     const monTableau = await response.json();
     mesTodos.value = monTableau.map((unTodo: Todo & { todoId: number }) => ({
         ...unTodo,
@@ -75,34 +77,59 @@ const handleUpdateTodo = (totoNewValue: Todo, index: number) => {
           On peut donc aussi utiliser l'object spreading sur les éléments d'un tableau pour 
           créer un nouveau tableau contenant nos éléments mis à jour
       */
-    mesTodos.value = [
-        ...mesTodos.value.slice(0, index),
-        totoNewValue,
-        ...mesTodos.value.slice(index + 1),
-    ];
+
+    fetch(`api/todos/${totoNewValue.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(totoNewValue),
+    })
+    .then((res) => res.json())
+    .then((todo) => {
+        console.log('updated Todo :', todo.id)
+    })
 };
 /**
  * fonction appelée pour ajouter le nouveau todo à la collection des todos
  */
-const addTodo = () => {
-    // si le texte n'est pas vide
-    if (newTodo.value.text.length) {
-        // on mute l'état de mesTodos.value, ce qui est détecté par Vue
-        mesTodos.value.push(
-            /* on récupère la valeur de newTodo, et on set les propriétés displayDone et id
-                     (sinon on ne verrait pas la case à cocher et l'id ne serait pas à jour)
-                  */
-            { ...newTodo.value, displayDone: true, id: newTodoId.value },
-        );
-        // alternativement, on aurait pu écrire : mesTodos.value = [...mesTodos.value, {[nouvel objet]}]
-        mesTodos.value = [
-            ...mesTodos.value,
-            { ...newTodo.value, displayDone: true, id: newTodoId.value },
-        ];
-        // on reset le texte du newTodo
-        newTodo.value.text = '';
-    }
-};
+ async function handleAddTodo() {
+  // si le texte n'est pas vide
+  if (newTodo.value.text.length) {
+    // on ajoute le todo à la liste des todos
+    const res = await fetch('api/todos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newTodo.value),
+    })
+    const todo = await res.json()
+  // on mute la valeur de mesTodos.value, ce qui est détecté par Vue
+    mesTodos.value.push(
+      /* on récupère la valeur de newTodo, et on set les propriétés displayDone et id
+         (sinon on ne verrait pas la case à cocher et l'id ne serait pas à jour)
+      */
+      { ...todo, interact: true, id: newTodoId.value },
+    )
+    // alternativement, on aurait pu écrire : mesTodos.value = [...mesTodos.value, {[nouvel objet]}]
+
+    // on reset le texte du newTodo
+    newTodo.value.text = ''
+  }
+}
+
+const handleDeleteTodo = (id: number) => {
+  // on fait un appel à l'API pour supprimer le todo
+
+  fetch(`api/todos/${id}`, { method: 'DELETE' })
+    .then((res) => res.json())
+    .then((todo) => {
+      // on mute la valeur de mesTodos.value, ce qui est détecté par Vue
+      mesTodos.value = mesTodos.value.filter((t) => t.id !== id)
+      console.log(todo)
+    })
+}
 /**
  * on set une ref computed qui se met à jour dès que mesTodos est complètement done
  */
@@ -120,7 +147,7 @@ const allDone = computed(() => mesTodos.value.filter((t) => !t.done).length === 
         </div>
         <div class="card">
             <h2 class="title">Ajouter un Todo</h2>
-            <TodoItem :todo="newTodo" @enter="addTodo" @update:todo="$event => newTodo = $event" />
+            <TodoItem :todo="newTodo" @enter="handleAddTodo" @update:todo="$event => newTodo = $event" />
         </div>
     </main>
     <!-- Si tous les todos sont done, on ajoute des confettis parce que c'est la fête -->
