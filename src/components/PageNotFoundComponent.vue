@@ -4,7 +4,7 @@
         <p>
             On a pas trouvé cette URL. Mais pas de soucis, on a une licorne qui dabbe.
         </p>
-        <img src="src/assets/unicorn.jpg" height="200" />
+        <img src="@/assets/unicorn.jpg" height="200" />
         <p>
             <RouterLink to="/">Retour à l'accueil</RouterLink>
         </p>

@@ -9,6 +9,9 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 // on importe le composant App qui représente l'application
 import App from './App.vue';
 
+import Vueticol from 'vueticol';
+import 'vueticol/dist/vueticol.css';
+
 /*  on utilise la méthode createApp de Vue pour créer une application Vue 
     et on "monte" l'application sur une balise HTML (ce qui va la remplir
     du contenu de notre application)
@@ -25,6 +28,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/home', redirect: '/' },
   // une autre route /about render le AboutComponent
   { path: '/about', component: AboutComponent },
+  // une autre pour le nouveau design
   /*
    *   si aucune route n'a matché le path, on peut créer une route "wildcard"
    *   qui redirige vers un composant not found
@@ -51,6 +55,7 @@ const router = createRouter({
 const app = createApp(App);
 // on injecte le router dans l'application créée en appelant app.use(router)
 app.use(router);
+app.use(Vueticol);
 // on monte le composant App dans la <div id="app"/>.
 app.mount('#app');
 /*

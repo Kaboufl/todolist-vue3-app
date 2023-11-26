@@ -23,34 +23,21 @@ import type { Todo } from '@/models/Todo.model'
 </script>
 
 <template>
-  <header>
-    <h1 class="title">Vue 3 TodoList</h1>
-  </header>
-  <main>
+  
     <RouterView />
-  </main>
 
   <footer>
     <p>
       <RouterLink to="about">A propos de cette app</RouterLink>
+      <RouterLink to="new-design">Nouveau design</RouterLink>
     </p>
   </footer>
 </template>
 
 <!--
-    Le style du composant est encapsulé (scoped), 
-    c'est-à-dire que chaque règle définie ici ne s'applique que sur ce composant
-    Dans les faits, Vue.js va créer un hash unique à chaque composant 
-    et suffixer nos règles de style avec ce hash 
+    Inspiration du design de l'app : https://www.figma.com/community/file/879327606353067444/embed
  -->
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.title {
-  text-align: center;
-}
 
 .main {
   flex: 1 0
@@ -65,7 +52,6 @@ header {
 }
 
 footer {
-  background-color: goldenrod;
   text-align: center;
   font-weight: bolder;
 }
