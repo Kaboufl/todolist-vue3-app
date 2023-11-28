@@ -11,11 +11,11 @@ const categories = ref<Categorie[]>([]);
 const todos = ref<Todo[]>([]);
 
 const addCategoryState = ref(false);
-const newCategorie = ref<Partial<Categorie>>();
-newCategorie.value = {
-  libelle: '',
+const newCategorie = ref<Categorie>({
+  idCategorie: 0,
   hex_color: '',
-};
+  libelle: '',
+});
 
 const getCategories = async () => {
   const response = await fetch('api/categories');
@@ -30,6 +30,9 @@ const getCategories = async () => {
 
 const handleAddCategory = async () => {
   console.log(newCategorie.value);
+  if (newCategorie.value === undefined) {
+    return;
+  }
   try {
     const response = await fetch(`api/categories`, {
       method: 'POST',
@@ -40,10 +43,14 @@ const handleAddCategory = async () => {
     });
     const json = await response.json();
     console.log('réponse :', json);
-    newCategorie.value.idCategorie = json.id;
+    newCategorie.value = {
+      ...newCategorie.value,
+      idCategorie: json.id,
+    };
     categories.value.push(newCategorie.value);
     addCategoryState.value = false;
     newCategorie.value = {
+      idCategorie: 0,
       libelle: '',
       hex_color: '',
     };
