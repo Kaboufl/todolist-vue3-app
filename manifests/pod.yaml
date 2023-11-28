@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: syndr0m-registry
+  namespace: kube-system
+  annotations:
+    digitalocean.com/dosecret-identifier: syndr0m-registry
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJyZWdpc3RyeS5kaWdpdGFsb2NlYW4uY29tIjp7ImF1dGgiOiJaRzl3WDNZeFgySTRNVEl5TXpnNE5HWTJOelprWVRWaVpEUTBPRFprTURNd05ESmhNVGM0TVdVeE9XSXhNV1ExTkdJMk1XRmpNekUyT0RVeU1UTXpZbUl5WXpsaFpHUTZaRzl3WDNZeFgySTRNVEl5TXpnNE5HWTJOelprWVRWaVpEUTBPRFprTURNd05ESmhNVGM0TVdVeE9XSXhNV1ExTkdJMk1XRmpNekUyT0RVeU1UTXpZbUl5WXpsaFpHUT0ifX19
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: to-list-lb
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: todo-list-app
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      name: todo-express-api
+  selector:
+    app: todo-list
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-list
+spec:
+  selector:
+    name: todo-list
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: todo-list-app
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      name: todo-express-api
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: todo-list
+  labels:
+    name: todo-list
+spec:
+  hostname: todo-list-app
+  containers:
+    - name: todo-list-app
+      image: registry.digitalocean.com/syndr0m-registry/todo-list-app
+      ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: todo-express-api
+  labels:
+    name: todo-list
+spec:
+  hostname: todo-express-api
+  containers:
+    - name: todo-express-api
+      image: registry.digitalocean.com/syndr0m-registry/todo-express-api
+      ports:
+        - containerPort: 8080
+---
+

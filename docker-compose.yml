@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  todo-list-app:
+    container_name: todo-list-vue
+    build:
+      context: .
+      dockerfile: vue.Dockerfile
+    ports:
+      - '80:80'
+    networks:
+      - todo-list-network
+    depends_on:
+      - todo-list-api
+
+  todo-list-api:
+    image: todo-express-api
+    container_name: todo-list-api
+    hostname: todo-list-api
+    ports:
+      - '8080:8080'
+    networks:
+      - todo-list-network
+
+networks:
+  todo-list-network:
+    driver: bridge
